@@ -1,0 +1,20 @@
+{
+    "name": "monzo-api",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Reece English",
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^16.4.7",
+        "node-cron": "^3.0.3"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.7",
+        "typescript": "^5.7.3"
+    }
+}

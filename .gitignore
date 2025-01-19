@@ -1,0 +1,70 @@
+# Node.js related
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+.cache/
+.vscode/
+.DS_Store
+
+# Logs
+logs
+*.log
+logs/*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Build files
+dist/
+build/
+out/
+
+# Operating system files
+Thumbs.db
+.DS_Store
+
+# Environment variables
+.env
+.env.*.local
+
+# IDEs and Editors
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Testing
+coverage/
+
+# Optional npm cache
+.npm
+
+# Production
+.env.production
+.env.production.local
+
+# Optional yarn cache
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Optional next.js build output
+.next/
+
+# Optional serverless build output
+.serverless/
+
+# Optional firebase build output
+.firebase/
