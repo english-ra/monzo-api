@@ -1,10 +1,10 @@
 # Monzo API Project
 
 ### Problem
-I really like Monzo for the amount of automation you can do out of the box, directly within the app but there is a slight issue I have come across. I get paid on the last Friday of the month and there is no option to automatically move money to pots based on this criteria. This mean that it leaves me with the option to set it for the 1st of the month but this means that there can sometimes be up to a week where the money stays in my main account balance.
+I'm a big fan of Monzo due to the amount of automation that can be done from within the app. However, I identified an issue with the configuration - there was no criteria to move money into specific pots based on the last Friday of the month, which is pay day for me and many others. This leaves me with the option to set it for the 1st of the month - meaning there can sometimes be up to a week during which the money remains in my account balance. 
 
 ### Solution
-I have created an automation mini app that runs on the last Friday of the month and automatically sorts my money into the respective pots. This also supports Monzo's Joint account.
+I have created an extension of Monzo's out of box features in the form of an automation mini app that interacts with the Monzo API and runs on the last Friday of the month and automatically sorts my money into the respective pots. This also supports Monzo's Joint accounts.
 
 ### Sharing and Usage
-Please feel free to use this as a baseline and expand upon for anything that works for you.
+Please feel free to use this as a baseline to expand upon for any integrations you'd like to build out using the Monzo API.
