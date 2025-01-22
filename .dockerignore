@@ -1,0 +1,7 @@
+# Ignore everything except required files
+**
+
+# Allow specific files and directories
+!src/
+!package*.json
+!tsconfig.json
