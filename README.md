@@ -8,3 +8,15 @@ I have created an extension of Monzo's out of box features in the form of an aut
 
 ### Sharing and Usage
 Please feel free to use this as a baseline to expand upon for any integrations you'd like to build out using the Monzo API.
+
+
+## Documentation
+
+### Command Line Interface (CLI)
+
+**Starting the CLI:**
+Run it in docker exec.
+
+```SHELL
+node --loader ts-node/esm src/app.ts cli
+```
