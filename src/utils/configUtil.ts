@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { decrypt, encrypt } from "./cryptoUtil";
 
 export interface ConfigData {
     [key: string]: any;
@@ -40,6 +41,21 @@ export class ConfigUtil {
 
     set(key: string, value: any): void {
         this.config[key] = value;
+    }
+
+    setEncrypted(key: string, value: string): void {
+        this.config[key] = encrypt(value);
+    }
+
+    getDecrypted(key: string, secret: string): string | undefined {
+        const encryptedValue = this.config[key];
+        if (!encryptedValue) return undefined;
+        try {
+            return decrypt(encryptedValue);
+        } catch (err) {
+            console.error("Failed to decrypt config value for key:", key, err);
+            return undefined;
+        }
     }
 
     async save(): Promise<void> {
