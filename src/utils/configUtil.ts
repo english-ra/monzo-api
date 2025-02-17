@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { decrypt, encrypt } from "./cryptoUtil";
+import { decrypt, encrypt } from "./cryptoUtil.js";
 
 export interface ConfigData {
     [key: string]: any;
@@ -47,7 +47,7 @@ export class ConfigUtil {
         this.config[key] = encrypt(value);
     }
 
-    getDecrypted(key: string, secret: string): string | undefined {
+    getDecrypted(key: string): string | undefined {
         const encryptedValue = this.config[key];
         if (!encryptedValue) return undefined;
         try {

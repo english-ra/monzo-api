@@ -3,7 +3,7 @@ import crypto from "crypto";
 const algorithm = "aes-256-gcm";
 
 export const encrypt = (text: string): string => {
-    const secret = process.env.SECRET_KEY!;
+    const secret = process.env.ENCRYPTION_KEY!;
 
     const salt = crypto.randomBytes(16);
     const key = crypto.scryptSync(secret, salt, 32);
@@ -26,7 +26,7 @@ export const encrypt = (text: string): string => {
 };
 
 export const decrypt = (encryptedText: string): string => {
-    const secret = process.env.SECRET_KEY!;
+    const secret = process.env.ENCRYPTION_KEY!;
     const { salt, iv, tag, content } = JSON.parse(encryptedText);
 
     const key = crypto.scryptSync(secret, Buffer.from(salt, "hex"), 32);
