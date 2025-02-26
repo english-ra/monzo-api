@@ -4,16 +4,20 @@ import crypto from "crypto";
 import config from "../config/index.js";
 import { askQuestion } from "./cli.js";
 import { ConfigUtil } from "../utils/configUtil.js";
+import { MonzoService } from "../services/MonzoService.js";
 
 const configFile = new ConfigUtil("/app/config/config.json");
 
 export const executeCommand = async (command: string, rl: Interface) => {
     switch (command) {
+        case "auth":
+            initiateMonzoAuthentication(rl);
+            break;
         case "auth creds":
             await setCredentials(rl);
             break;
-        case "auth":
-            initiateMonzoAuthentication(rl);
+        case "auth complete":
+            await completeAuth();
             break;
         case "exit":
             rl.close();
@@ -70,3 +74,14 @@ const initiateMonzoAuthentication = async (rl: Interface) => {
     console.log(`Navigate here to continue: ${authUrl}`);
     console.log("\nOnce completed, please type 'auth complete':");
 };
+
+const completeAuth = async () => {
+    const monzoService = new MonzoService();
+    try {
+        console.log("Testing the connection to Monzo. Please bare with...");
+        const response = await monzoService.getWhoAmI();
+        console.log("Success!", response);
+    } catch (error) {
+        console.log(`Test failed: ${error}`);
+    }
+}
