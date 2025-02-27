@@ -5,10 +5,17 @@ import config from "../config/index.js";
 import { askQuestion } from "./cli.js";
 import { ConfigUtil } from "../utils/configUtil.js";
 import { MonzoService } from "../services/MonzoService.js";
+import { executeMonzoCommand } from "./monzoCommands.js";
 
 const configFile = new ConfigUtil("/app/config/config.json");
 
 export const executeCommand = async (command: string, rl: Interface) => {
+    const commands = command.split(" ");
+    if (commands[0] === "monzo") {
+        executeMonzoCommand(commands.slice(1), rl);
+        return;
+    }
+
     switch (command) {
         case "auth":
             initiateMonzoAuthentication(rl);

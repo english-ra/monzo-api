@@ -63,24 +63,52 @@ export class MonzoService {
         }
     }
 
-    // public async getPots(accountId: string) {
-    //     try {
-    //         const searchParams = new URLSearchParams({ current_account_id: accountId }).toString();
-    //         const response = await fetch(`${constants.monzo.apiRootUrl}/pots?${searchParams}`, {
-    //             method: "GET",
-    //             headers: {
-    //                 "Authorization": env.monzo.accessToken
-    //             }
-    //         });
+    public async getAccounts() {
+        try {
+            // Get the access token
+            await this.config.load();
+            const accessToken = this.config.getDecrypted('accessToken');
 
-    //         if (!response.ok) {
-    //             throw new Error(response.statusText);
-    //         }
+            const response = await fetch(`${constants.monzo.apiRootUrl}/accounts`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
+            });
 
-    //         const data = await response.json();
-    //         return data;
-    //     } catch (error) {
-    //         console.log("Error obtaining pot:", error);
-    //     }
-    // };
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.log("Error getting accounts:", error);
+        }
+    }
+
+    public async getPots(accountId: string) {
+        try {
+            // Get the access token
+            await this.config.load();
+            const accessToken = this.config.getDecrypted('accessToken');
+
+            const searchParams = new URLSearchParams({ current_account_id: accountId, deleted: 'false' }).toString();
+            const response = await fetch(`${constants.monzo.apiRootUrl}/pots?${searchParams}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            const data = await response.json();
+            return data.pots.filter((pot: any) => pot.deleted == false);
+        } catch (error) {
+            console.log("Error getting pots:", error);
+        }
+    }
 }
