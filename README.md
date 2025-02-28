@@ -20,3 +20,9 @@ Run it in docker exec.
 ```SHELL
 node --loader ts-node/esm src/app.ts cli
 ```
+
+Sample Monzo Schedule CSV:
+
+| Day | Period | Reference | Amount | Origin Account ID | Origin Pot ID | Destination Account ID | Destination Pot ID |
+| --- | ------ | --------- | ------ | ----------------- | ------------- | ---------------------- | ------------------- |
+|     |        |           |        |                   |               |                        |                     |
