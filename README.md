@@ -21,7 +21,12 @@ Run it in docker exec.
 node --loader ts-node/esm src/app.ts cli
 ```
 
-Sample Monzo Schedule CSV:
+
+### Monzo Configuration
+
+
+Importing the transfers from a CSV:
+
 
 | Day | Period | Reference | Amount | Origin Account ID | Origin Pot ID | Destination Account ID | Destination Pot ID |
 | --- | ------ | --------- | ------ | ----------------- | ------------- | ---------------------- | ------------------- |
