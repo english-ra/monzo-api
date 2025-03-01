@@ -1,5 +1,6 @@
 import express, { Application } from "express";
 import AuthController from "./controllers/AuthController.js";
+import { initScheduler } from "./scheduler/index.js";
 
 export default class Server {
     public app: Application;
@@ -26,6 +27,7 @@ export default class Server {
     public async run() {
         try {
             // Start the server
+            initScheduler();
             this.app.listen(this.port, () => {
                 console.log(`Server is running on port: ${this.port}`);
             });
