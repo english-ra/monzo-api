@@ -68,3 +68,5 @@ coverage/
 
 # Optional firebase build output
 .firebase/
+
+monzo_schedules.csv
