@@ -13,6 +13,9 @@ export const executeMonzoCommand = async (command: string[], rl: Interface) => {
         case "pots":
             await displayPots(command[1]);
             break;
+        case "deposittest":
+            await depositIntoPotTest();
+            break;
         default:
             console.log(`Unknown command: ${command}`);
     };
@@ -46,5 +49,15 @@ const displayPots = async (accountId: string) => {
         }));
     } catch (error) {
         console.log(`Failed to get pots: ${error}`);
+    }
+};
+
+const depositIntoPotTest = async () => {
+    try {
+        console.log("Testing deposit of 1p...");
+        const response = await monzoService.depositIntoPot("acc_00009kNwKfpQPAnBTrO62z", "pot_0000AmQAy9k3s1XNiDsUF8", "1");
+        console.log(response);
+    } catch (error) {
+        console.log("Failed to deposit", error);
     }
 };

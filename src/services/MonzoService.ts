@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import env from "../config/env.js";
 import constants from "../config/index.js";
 import { ConfigUtil } from "../utils/configUtil.js";
@@ -109,6 +110,39 @@ export class MonzoService {
             return data.pots.filter((pot: any) => pot.deleted == false);
         } catch (error) {
             console.log("Error getting pots:", error);
+        }
+    }
+
+    public async depositIntoPot(sourceAccountId: string, potId: string, amount: string) {
+        try {
+            // Get the access token
+            await this.config.load();
+            const accessToken = this.config.getDecrypted('accessToken');
+
+            const body = new URLSearchParams({
+                source_account_id: sourceAccountId,
+                amount: amount.toString(),
+                dedupe_id: randomUUID().toString()
+            }).toString();
+            const response = await fetch(`${constants.monzo.apiRootUrl}/pots/${potId}/deposit`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: body
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                console.log(data);
+                throw new Error(response.statusText);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.log("Error depositing into a pot:", error);
         }
     }
 }
