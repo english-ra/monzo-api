@@ -2,12 +2,42 @@ import { randomUUID } from "crypto";
 import env from "../config/env.js";
 import constants from "../config/index.js";
 import { ConfigUtil } from "../utils/configUtil.js";
+import { addSecondsToDate } from "../utils/utils.js";
 
 export class MonzoService {
     private config: ConfigUtil;
 
     constructor() {
         this.config = new ConfigUtil("/app/config/config.json");
+    }
+
+    async getAccessToken() {
+        await this.config.load();
+
+        const tokenExpiry = this.config.get('tokenExpires');
+
+        if (new Date() > new Date(tokenExpiry as string)) {
+            try {
+                await this.config.load();
+            
+                const refreshToken = this.config.getDecrypted('refreshToken');
+                const clientId = this.config.getDecrypted('clientId');
+                const clientSecret = this.config.getDecrypted('clientSecret');
+            
+                const refreshTokenData = await this.getRefreshedToken(clientId!, clientSecret!, refreshToken!);
+            
+                this.config.setEncrypted("accessToken", refreshTokenData.access_token);
+                this.config.setEncrypted("refreshToken", refreshTokenData.refresh_token);
+                this.config.set("tokenExpires", addSecondsToDate(refreshTokenData.expires_in).toISOString());
+                await this.config.save();
+                console.log("Refresh successful");
+            } catch (error) {
+                console.log(`Error refreshing token: ${error}`);
+            }
+        }
+
+        const accessToken = this.config.getDecrypted('accessToken');
+        return accessToken;
     }
 
     public async getTokensFromCode(clientId: string, clientSecret: string, redirectUrl: string, code: string) {
@@ -38,7 +68,7 @@ export class MonzoService {
         }
     };
 
-    public async refreshToken(clientId: string, clientSecret: string, refreshToken: string) {
+    public async getRefreshedToken(clientId: string, clientSecret: string, refreshToken: string) {
         try {
             const formData = new URLSearchParams({
                 grant_type: "refresh_token",
@@ -68,10 +98,7 @@ export class MonzoService {
     public async getWhoAmI() {
         try {
             // Get the access token
-            await this.config.load();
-            const accessToken = this.config.getDecrypted('accessToken');
-
-            console.log
+            const accessToken = await this.getAccessToken();
 
             const response = await fetch(`${constants.monzo.apiRootUrl}/ping/whoami`, {
                 method: "GET",
@@ -94,8 +121,7 @@ export class MonzoService {
     public async getAccounts() {
         try {
             // Get the access token
-            await this.config.load();
-            const accessToken = this.config.getDecrypted('accessToken');
+            const accessToken = await this.getAccessToken();
 
             const response = await fetch(`${constants.monzo.apiRootUrl}/accounts`, {
                 method: "GET",
@@ -118,8 +144,7 @@ export class MonzoService {
     public async getPots(accountId: string) {
         try {
             // Get the access token
-            await this.config.load();
-            const accessToken = this.config.getDecrypted('accessToken');
+            const accessToken = await this.getAccessToken();
 
             const searchParams = new URLSearchParams({ current_account_id: accountId, deleted: 'false' }).toString();
             const response = await fetch(`${constants.monzo.apiRootUrl}/pots?${searchParams}`, {
@@ -143,8 +168,7 @@ export class MonzoService {
     public async depositIntoPot(sourceAccountId: string, potId: string, amount: string) {
         try {
             // Get the access token
-            await this.config.load();
-            const accessToken = this.config.getDecrypted('accessToken');
+            const accessToken = await this.getAccessToken();
 
             const body = new URLSearchParams({
                 source_account_id: sourceAccountId,

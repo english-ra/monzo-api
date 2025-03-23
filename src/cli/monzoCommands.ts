@@ -2,6 +2,7 @@ import { Interface } from "readline";
 import { askQuestion } from "./cli.js";
 import { ConfigUtil } from "../utils/configUtil.js";
 import { MonzoService } from "../services/MonzoService.js";
+import { addSecondsToDate } from "../utils/utils.js";
 
 const config = new ConfigUtil("/app/config/config.json");
 const monzoService = new MonzoService();
@@ -33,10 +34,11 @@ export const refreshToken = async () => {
         const clientId = config.getDecrypted('clientId');
         const clientSecret = config.getDecrypted('clientSecret');
 
-        const refreshTokenData = await monzoService.refreshToken(clientId!, clientSecret!, refreshToken!);
+        const refreshTokenData = await monzoService.getRefreshedToken(clientId!, clientSecret!, refreshToken!);
 
         config.setEncrypted("accessToken", refreshTokenData.access_token);
         config.setEncrypted("refreshToken", refreshTokenData.refresh_token);
+        config.set("tokenExpires", addSecondsToDate(refreshTokenData.expires_in).toISOString());
         await config.save();
         console.log("Refresh successful");
     } catch (error) {
