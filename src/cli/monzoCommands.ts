@@ -21,6 +21,9 @@ export const executeMonzoCommand = async (command: string[], rl: Interface) => {
         case "refresh":
             await refreshToken();
             break;
+        case "set-tasks":
+            await setDepositTasks(rl);
+            break;
         default:
             console.log(`Unknown command: ${command}`);
     };
@@ -85,4 +88,25 @@ const depositIntoPotTest = async () => {
     } catch (error) {
         console.log("Failed to deposit", error);
     }
+};
+
+const setDepositTasks = async (rl: Interface) => {
+    console.log("Enter the prompts below to set the tasks. Enter 'complete' at anytime to stop");
+
+    const tasks = [];
+    while (true) {
+        const depositPot = await askQuestion("Please enter the id of the pot you want to deposit into: ", rl);
+        if (depositPot === "complete") { break; }
+        const amount = await askQuestion("Amount as an integer (£10.50 -> 1050): : ", rl);
+        if (amount === "complete") { break; }
+
+        tasks.push({
+            depositPot: depositPot,
+            amount: amount
+        });
+    };
+
+    await config.load();
+    config.set("monzoTasks", JSON.stringify(tasks));
+    await config.save();
 };
