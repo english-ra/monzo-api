@@ -38,6 +38,33 @@ export class MonzoService {
         }
     };
 
+    public async refreshToken(clientId: string, clientSecret: string, refreshToken: string) {
+        try {
+            const formData = new URLSearchParams({
+                grant_type: "refresh_token",
+                client_id: clientId,
+                client_secret: clientSecret,
+                refresh_token: refreshToken
+            });
+            const response = await fetch(`https://api.monzo.com/oauth2/token`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.log("Error requesting refresh token:", error);
+        }
+    };
+
     public async getWhoAmI() {
         try {
             // Get the access token

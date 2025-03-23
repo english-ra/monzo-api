@@ -3,6 +3,7 @@ import { askQuestion } from "./cli.js";
 import { ConfigUtil } from "../utils/configUtil.js";
 import { MonzoService } from "../services/MonzoService.js";
 
+const config = new ConfigUtil("/app/config/config.json");
 const monzoService = new MonzoService();
 
 export const executeMonzoCommand = async (command: string[], rl: Interface) => {
@@ -16,10 +17,32 @@ export const executeMonzoCommand = async (command: string[], rl: Interface) => {
         case "deposittest":
             await depositIntoPotTest();
             break;
+        case "refresh":
+            await refreshToken();
+            break;
         default:
             console.log(`Unknown command: ${command}`);
     };
 };
+
+export const refreshToken = async () => {
+    try {
+        await config.load();
+
+        const refreshToken = config.getDecrypted('refreshToken');
+        const clientId = config.getDecrypted('clientId');
+        const clientSecret = config.getDecrypted('clientSecret');
+
+        const refreshTokenData = await monzoService.refreshToken(clientId!, clientSecret!, refreshToken!);
+
+        config.setEncrypted("accessToken", refreshTokenData.access_token);
+        config.setEncrypted("refreshToken", refreshTokenData.refresh_token);
+        await config.save();
+        console.log("Refresh successful");
+    } catch (error) {
+        console.log(`Error refreshing token: ${error}`);
+    }
+}
 
 const displayAccounts = async () => {
     try {
