@@ -3,6 +3,7 @@ import { askQuestion } from "./cli.js";
 import { ConfigUtil } from "../utils/configUtil.js";
 import { MonzoService } from "../services/MonzoService.js";
 import { addSecondsToDate } from "../utils/utils.js";
+import { processScheduledPotTransfers } from "../scheduler/monzoTasks.js";
 
 const config = new ConfigUtil("/app/config/config.json");
 const monzoService = new MonzoService();
@@ -23,6 +24,9 @@ export const executeMonzoCommand = async (command: string[], rl: Interface) => {
             break;
         case "set-tasks":
             await setDepositTasks(rl);
+            break;
+        case "run":
+            await processScheduledPotTransfers();
             break;
         default:
             console.log(`Unknown command: ${command}`);
